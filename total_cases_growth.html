@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Add buttons -->
+<button onclick="update('World')">World</button>
+<button onclick="update('United States')">US</button>
+<button onclick="update('India')">India</button>
+<button onclick="update('China')">China</button>
+
+<!-- Initialize a select button -->
+<select id="selectButton"></select>
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 100, right: 100, bottom: 70, left: 260},
+    width = 1260 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Initialize the X axis
+//var x = d3.scaleBand()
+//  .range([ 0, width ])
+//  .padding(0.2);
+var x = d3.scaleBand()
+  .domain(["2019-12-31", "2020-07-21"])
+  .range([ 0, width ]);
+var xAxis = svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+
+// Initialize the Y axis
+var y = d3.scaleLinear()
+  .range([ height, 0]);
+var yAxis = svg.append("g")
+  .attr("class", "myYaxis")
+
+
+// A function that create / update the plot for a given variable:
+function update(selectedVar) {
+
+  // Parse the Data
+  d3.csv("https://covid.ourworldindata.org/data/ecdc/total_cases.csv", function(rawData) {
+  //d3.csv("http://github.com/surajbisht1809/Covid-19/blob/master/total_cases.csv", function(data) {
+    // X axis
+	var cutoffDate = new Date(2020,0,15);
+	//console.log(rawData);
+		var data = rawData.filter(function(d) {return new Date(d.date) > cutoffDate;});
+	//console.log(data);
+	//console.log(cutoffDate);
+    x.domain(data.map(function(d) { return d.date; }))
+    xAxis.transition().duration(2000).call(d3.axisBottom(x).tickValues(x.domain().filter(function(d, i) { return !(i % 3); })))
+//	.ticks(3)
+	.selectAll("text")
+		.attr("transform", "translate(-25,30)rotate(-60)")
+
+    // Add Y axis
+    y.domain([0, d3.max(data, function(d) { return +d[selectedVar] }) ]);
+    yAxis.transition().duration(2000).call(d3.axisLeft(y));
+    
+	var u = svg.selectAll("rect")
+      .data(data)
+    // update bars
+    u
+      .enter()
+      .append("rect")
+      .merge(u)
+      .transition()
+      .duration(1000)
+        .attr("x", function(d) { return x(d.date); })
+        .attr("y", function(d) { return y(d[selectedVar]); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d[selectedVar]); })
+        .attr("fill", "#69b3a2")
+  })
+
+}
+
+// Initialize plot
+update('World')
+ 
+ d3.csv("https://covid.ourworldindata.org/data/ecdc/locations.csv", function(countryData) {
+    // add the options to the button
+	countryData.push({countriesAndTerritories: "World",location: "World", continent: "World",population_year: "2020",population:"38928341"})
+	console.log(countryData)
+    d3.select("#selectButton")
+      .selectAll('myOptions')
+     	.data(countryData)
+      .enter()
+    	.append('option')
+      .text(function (d) { return d.location; }) // text showed in the menu
+      .attr("value", function (d) { return d.location; }) // corresponding value returned by the button
+	})	
+
+    d3.select("#selectButton").on("change", function(d) {
+        // recover the option that has been chosen
+        var selectedOption = d3.select(this).property("value")
+        // run the updateChart function with this selected option
+        update(selectedOption)
+    })
+	
+</script>
