@@ -113,14 +113,15 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
   //       AXIS  AND SCALE      //
   // ---------------------------//
 
-  var data = rawData.filter(function(d) {return d.total_deaths > 0});
+  //var data = rawData.filter(function(d) {return d.total_deaths > 0});
+  var data = rawData.filter(function(d) {return d.total_deaths > 100 && d.total_cases > 1000});
   
   // Add X axis
   var x = d3.scaleLog()
-    .domain([1, 4500000])
+    .domain([1000, 10000000])
     .range([ 0, width ]);
 
-  var x_axis = d3.axisBottom(x).ticks(6).tickFormat(d3.format(".0s"));
+  var x_axis = d3.axisBottom(x).ticks(4).tickFormat(d3.format(".0s"));
   
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -137,9 +138,9 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
 
   // Add Y axis
   var y = d3.scaleLog()
-    .domain([1, 2000000])
+    .domain([100, 2000000])
     .range([ height, 0]);
-  var y_axis = d3.axisLeft(y).ticks(6).tickFormat(d3.format(".0s"));  	
+  var y_axis = d3.axisLeft(y).ticks(4).tickFormat(d3.format(".0s"));  	
   svg.append("g")
     .call(y_axis);
 
@@ -269,24 +270,24 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
    
    svg
     .append("line")
-      .attr("x1", x(10000) )
-      .attr("x2", x(110000) )
+      .attr("x1", x(50000) )
+      .attr("x2", x(250000) )
       .attr("y1", y(1000000) )
       .attr("y2", y(100000) )
       .attr("stroke", "#F46D43")
    
    svg
     .append("text")
-    .attr("x", x(2000))
-    .attr("y", y(1000000))
+    .attr("x", x(20000))
+    .attr("y", y(1100000))
     .text("Most impacted countries")
     .style("font-size", "15px")
 	
 	svg
     .append("circle")
-	.attr("cx",x(1000000))
+	.attr("cx",x(1400000))
 	.attr("cy",y(50000))
-	.attr("r", 155)
+	.attr("r", 200)
     .attr("stroke", "#F46D43")
     .attr("stroke-dasharray", "4")
 	.attr("fill", "none")  
