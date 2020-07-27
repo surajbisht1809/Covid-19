@@ -45,7 +45,7 @@
 
 div.a {
   text-align: center;
-  font-size: 200%;
+  font-size: 150%;
 }
 
 div.b {
@@ -55,15 +55,30 @@ div.b {
 div.c {
   text-align: left;
   font-weight: bold;
+  font-size: 125%;
 } 
 
 /* Header/Logo Title */
 .header {
-  padding: 2px;
   text-align: center;
   background: #aabc9c;
   color: white;
   font-size: 20px;
+}
+
+
+.body {
+  ext-align: center;
+  background: #cfbc9c;
+  color: white;
+  font-size: 18px;
+}
+
+.footer {
+  ext-align: center;
+  background: #3288BD;
+  color: white;
+  font-size: 18px;
 }
 </style>
 </head>
@@ -71,15 +86,13 @@ div.c {
 <!-- Load d3.js -->
 <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
 <script src="https://d3js.org/d3.v4.js"></script>
-<!-- Load d3-annotation -->
-<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 
 <div class="header">
   <h1>COVID-19 Global Impact</h1>
 </div>
 
 <div class="a">
-<p>Covid-19 New cases</p>
+<p><u>Covid-19 New cases reported</u></p>
 </div>
 
 
@@ -96,11 +109,16 @@ div.c {
 	<select class="dropbtn" id="selectButton"><option class="dropdown-content" value="World" selected>World </option></select>
 </div>
 <div class="b">	
-    <button class="button button4" onclick="window.location.href='./total_cases_growth.html'"> << Total Cases Growth </button>
+    <button class="button button4" onclick="window.location.href='./total_cases_growth.html'"> << Confirmed Cases Trend </button>
 	<button class="button button4" onclick="window.location.href='./total_deaths.html'"> Total Deaths trend >></button>
 </div>
 <!-- Create a div where the graph will take place -->
 <div id="covid_new_cases"></div>
+
+<div class="footer">
+  <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
+  For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
+</div>
 
 <script>
 
@@ -124,7 +142,7 @@ var svg = d3.select("#covid_new_cases")
 //  .range([ 0, width ])
 //  .padding(0.2);
 var x = d3.scaleBand()
-  .domain(["2019-12-31", "2020-07-21"])
+  //.domain(["2019-12-31", "2020-07-21"])
   .range([ 0, width ]);
 var xAxis = svg.append("g")
   .attr("transform", "translate(0," + height + ")")

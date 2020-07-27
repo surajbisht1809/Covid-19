@@ -45,7 +45,7 @@
 
 div.a {
   text-align: center;
-  font-size: 200%;
+  font-size: 150%;
 }
 
 div.b {
@@ -59,11 +59,24 @@ div.c {
 
 /* Header/Logo Title */
 .header {
-  padding: 2px;
   text-align: center;
   background: #aabc9c;
   color: white;
   font-size: 20px;
+}
+
+.body {
+  ext-align: center;
+  background: #cfbc9c;
+  color: white;
+  font-size: 18px;
+}
+
+.footer {
+  ext-align: center;
+  background: #3288BD;
+  color: white;
+  font-size: 18px;
 }
 </style>
 </head>
@@ -77,16 +90,29 @@ div.c {
   <h1>COVID-19 Global Impact</h1>
 </div>
 
-<div class="a">
-<p>Covid-19 Scatter Plot</p>
+<div>
+  <p class="body">Covid-19 has affected everyones's lives around the globe, let's go through impact level on various regions and countries.
+  Countries in all the regions are impacted with few countries including US, Brazil, India and Russia have reported most numbers of confirmed cases. 
+  Apart from few exceptions latest trend shows rapid growth in confirmed cases, deaths and daily new cases across all countries</p>
 </div>
 
 <div class="b">	
    <!-- <button class="button button4" onclick="window.location.href='./total_deaths.html'"> << Previuos Page </button> -->
-	<button class="button button4" onclick="window.location.href='./total_cases_growth.html'"> Total Cases Growth >></button>
+	<button class="button button4" onclick="window.location.href='./total_cases_growth.html'"> Confirmed Cases Trend >></button>
 </div>
+
+<div class="a">
+<p><u >Covid-19 Overview: Confirmed cases vs total deaths</u></p>
+</div>
+
 <!-- Create a div where the graph will take place -->
 <div id="covid_plot"></div>
+
+<div class="footer">
+  <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
+  For this graph very low impacted countries are removed where total cases are less than 1000 and deaths are less than 100 <br>
+  For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
+</div>
 
 <script>
 
@@ -187,7 +213,7 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
   var showTooltip = function(d) {
     tooltip
       .transition()
-      .duration(200)
+      .duration(100)
     tooltip
       .style("opacity", 1)
       .html("Country: " + d.country + "<br />" + "Total Cases:  " + formater(d.total_cases) + 
@@ -204,7 +230,7 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
   var hideTooltip = function(d) {
     tooltip
       .transition()
-      .duration(200)
+      .duration(100)
       .style("opacity", 0)
   }
 
@@ -259,15 +285,15 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
 	.append("text")
   //    .attr("dy", "0.35em")
       .attr("class", function(d) { return "bubbles " + d.continent })
-	  .attr("x", function (d) { return x(d.total_cases) + z(d.total_cases)/2 ;})
-	  .attr("y", function (d) { return y(d.total_deaths) + z(d.total_cases);; })
+	  .attr("x", function (d) { return x(d.total_cases) + z(d.total_cases)/2;})
+	  .attr("y", function (d) { return y(d.total_deaths) + z(d.total_cases)/2; })
 	  .attr("font-family", "sans-serif")
-      .attr("font-size", 10) 
+      .attr("font-size", 12)
       .text(function(d){ return d.country;})
+	  //.attr("rotate", 60)
 	  
 	// Append annotation line to highlight the separation
-
-   
+ 
    svg
     .append("line")
       .attr("x1", x(50000) )
@@ -278,10 +304,17 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
    
    svg
     .append("text")
+    .attr("x", x(10000))
+    .attr("y", y(1300000))
+    .text("Most impacted countries, Oceania region is least impacted")
+    .style("font-size", "18px")
+	svg
+    .append("text")
     .attr("x", x(20000))
-    .attr("y", y(1100000))
-    .text("Most impacted countries")
-    .style("font-size", "15px")
+    .attr("y", y(1000000))
+    .text("(Hover mouse over circles for further details and to filter region)")
+    .style("font-size", "12px")
+	
 	
 	svg
     .append("circle")
@@ -299,7 +332,7 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
       .data(allgroups)
       .enter()
       .append("circle")
-        .attr("cx", width - 100)
+        .attr("cx", width - 60)
         .attr("cy", function(d,i){ return height - 150 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
         .attr("r", 8)
         .style("fill", function(d){ return myColor(d)})
@@ -311,7 +344,7 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
       .data(allgroups)
       .enter()
       .append("text")
-        .attr("x", width - 95 + size*.9)
+        .attr("x", width - 55 + size*.9)
         .attr("y", function(d,i){ return i * (size + 5) + (size/2) + height - 160}) // 100 is where the first dot appears. 25 is the distance between dots
         .style("fill", function(d){ return myColor(d)})
         .text(function(d){ return d})
