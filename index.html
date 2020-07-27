@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<style>
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button4 {border-radius: 12px;}
+
+.dropbtn {
+  background-color: #ffa500;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown {
+  float: left;
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+div.a {
+  text-align: center;
+  font-size: 200%;
+}
+
+div.b {
+  text-align: right;
+}
+
+div.c {
+  text-align: left;
+  font-weight: bold;
+} 
+
+/* Header/Logo Title */
+.header {
+  padding: 2px;
+  text-align: center;
+  background: #aabc9c;
+  color: white;
+  font-size: 20px;
+}
+</style>
+</head>
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Load color scale -->
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<div class="header">
+  <h1>COVID-19 Global Impact</h1>
+</div>
+
+<div class="a">
+<p>Covid-19 Scatter Plot</p>
+</div>
+
+<div class="b">	
+   <!-- <button class="button button4" onclick="window.location.href='./total_deaths.html'"> << Previuos Page </button> -->
+	<button class="button button4" onclick="window.location.href='./total_cases_growth.html'"> Total Cases Growth >></button>
+</div>
+<!-- Create a div where the graph will take place -->
+<div id="covid_plot"></div>
+
+<script>
+
+
+// set the dimensions and margins of the graph
+var margin = {top: 40, right: 80, bottom: 100, left: 200},
+    width = 1340 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#covid_plot")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+		  
+
+//Read the data
+d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtered_data.csv", function(rawData) {
+
+  // ---------------------------//
+  //       AXIS  AND SCALE      //
+  // ---------------------------//
+
+  var data = rawData.filter(function(d) {return d.total_deaths > 0});
+  
+  // Add X axis
+  var x = d3.scaleLog()
+    .domain([1, 4500000])
+    .range([ 0, width ]);
+
+  var x_axis = d3.axisBottom(x).ticks(6).tickFormat(d3.format(".0s"));
+  
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(x_axis);
+
+  // Add X axis label:
+  svg.append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + margin.top) + ")")
+      .style("text-anchor", "middle")
+	  .style("font", "20px times")
+      .text("Confirmed Cases");
+
+  // Add Y axis
+  var y = d3.scaleLog()
+    .domain([1, 2000000])
+    .range([ height, 0]);
+  var y_axis = d3.axisLeft(y).ticks(6).tickFormat(d3.format(".0s"));  	
+  svg.append("g")
+    .call(y_axis);
+
+  // Add Y axis label:
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", margin.left - margin.left - margin.right)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+	  .style("font", "20px times")
+      .text("Total Deaths")
+
+  // Add a scale for bubble size
+  var z = d3.scaleSqrt()
+    .domain([100, 4500000])
+    .range([ 5, 40]);
+
+  // Add a scale for bubble color
+  var myColor = d3.scaleOrdinal()
+    .domain(["Asia", "Europe", "NorthAmerica", "SouthAmerica", "Africa", "Oceania"])
+    //.range(d3.schemeSet1);
+	//.range(["red", "blue", "green", "purple", "black" "orange"])
+	.range(["#5E4FA2", "#3288BD", "#FDAE61", "#F46D43", "#66C2A5", "#1BDDF4"])
+
+
+  // ---------------------------//
+  //      TOOLTIP               //
+  // ---------------------------//
+
+  // -1- Create a tooltip div that is hidden by default:
+  var tooltip = d3.select("#covid_plot")
+    .append("div")
+	  .style("position", "absolute")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "black")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+      .style("color", "white")
+
+   const formater =  d3.format(',d');
+  // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
+  var showTooltip = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+    tooltip
+      .style("opacity", 1)
+      .html("Country: " + d.country + "<br />" + "Total Cases:  " + formater(d.total_cases) + 
+	  "<br />" + "Total Deaths:  " + formater(d.total_deaths) +
+	  "<br />" + "Population:  " + formater(d.population))
+	  .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY) + "px")
+  }
+  var moveTooltip = function(d) {
+    tooltip
+      .style("left", (d3.mouse(this)[0]+30) + "px")
+      .style("top", (d3.mouse(this)[1]+30) + "px")
+  }
+  var hideTooltip = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 0)
+  }
+
+
+  // ---------------------------//
+  //       HIGHLIGHT GROUP      //
+  // ---------------------------//
+
+  // What to do when one group is hovered
+  var highlight = function(d){
+    // reduce opacity of all groups
+    d3.selectAll(".bubbles").style("opacity", .06)
+    // expect the one that is hovered
+    d3.selectAll("."+d).style("opacity", 1)
+  }
+
+  // And when it is not hovered anymore
+  var noHighlight = function(d){
+    d3.selectAll(".bubbles").style("opacity", 1)
+  }
+
+
+  // ---------------------------//
+  //       CIRCLES              //
+  // ---------------------------//
+
+  // Add dots
+  svg.append('g')
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("class", function(d) { return "bubbles " + d.continent })
+      .attr("cx", function (d) { return x(d.total_cases); })
+      .attr("cy", function (d) { return y(d.total_deaths); })
+      .attr("r", function (d) { return z(d.total_cases); })
+      .style("fill", function (d) { return myColor(d.continent); } )
+    // -3- Trigger the functions for hover
+    .on("mouseover", showTooltip )
+  //  .on("mousemove", moveTooltip )
+    .on("mouseleave", hideTooltip )
+	
+	caseThreshold = 300000;
+	//deathThreshold = 10000;
+	//var bigImpact = data.filter(function(d) {return (parseInt(d.total_cases) > caseThreshold || parseInt(d.total_deaths) > deathThreshold)});
+	var bigImpact = data.filter(function(d) {return (parseInt(d.total_cases) > caseThreshold)});
+	//Add name for countries
+   svg.append('g')
+    .selectAll("text")
+    .data(bigImpact)
+	.enter()
+	.append("text")
+  //    .attr("dy", "0.35em")
+      .attr("class", function(d) { return "bubbles " + d.continent })
+	  .attr("x", function (d) { return x(d.total_cases) + z(d.total_cases)/2 ;})
+	  .attr("y", function (d) { return y(d.total_deaths) + z(d.total_cases);; })
+	  .attr("font-family", "sans-serif")
+      .attr("font-size", 10) 
+      .text(function(d){ return d.country;})
+	  
+	// Append annotation line to highlight the separation
+
+   
+   svg
+    .append("line")
+      .attr("x1", x(10000) )
+      .attr("x2", x(110000) )
+      .attr("y1", y(1000000) )
+      .attr("y2", y(100000) )
+      .attr("stroke", "#F46D43")
+   
+   svg
+    .append("text")
+    .attr("x", x(2000))
+    .attr("y", y(1000000))
+    .text("Most impacted countries")
+    .style("font-size", "15px")
+	
+	svg
+    .append("circle")
+	.attr("cx",x(1000000))
+	.attr("cy",y(50000))
+	.attr("r", 155)
+    .attr("stroke", "#F46D43")
+    .attr("stroke-dasharray", "4")
+	.attr("fill", "none")  
+
+    // Add one dot in the legend for each name.
+    var size = 20
+    var allgroups = ["Asia", "Europe", "NorthAmerica", "SouthAmerica", "Africa", "Oceania"]
+    svg.selectAll("myrect")
+      .data(allgroups)
+      .enter()
+      .append("circle")
+        .attr("cx", width - 100)
+        .attr("cy", function(d,i){ return height - 150 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("r", 8)
+        .style("fill", function(d){ return myColor(d)})
+        .on("mouseover", highlight)
+        .on("mouseleave", noHighlight)
+
+    // Add labels beside legend dots
+    svg.selectAll("mylabels")
+      .data(allgroups)
+      .enter()
+      .append("text")
+        .attr("x", width - 95 + size*.9)
+        .attr("y", function(d,i){ return i * (size + 5) + (size/2) + height - 160}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", function(d){ return myColor(d)})
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .on("mouseover", highlight)
+        .on("mouseleave", noHighlight)
+
+  })
+</script>
