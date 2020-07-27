@@ -71,14 +71,15 @@ div.c {
 <!-- Load d3.js -->
 <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
 <script src="https://d3js.org/d3.v4.js"></script>
+<!-- Load d3-annotation -->
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 
 <div class="header">
   <h1>COVID-19 Global Impact</h1>
-  <p>Covid-19 has impacted everyones lives, in this story we are covering variuos stats and user can explore country specific details by selecting country</p>
 </div>
 
 <div class="a">
-<p>Covid-19 Confirmed case growth trend</p>
+<p>Covid-19 New cases</p>
 </div>
 
 
@@ -95,11 +96,11 @@ div.c {
 	<select class="dropbtn" id="selectButton"><option class="dropdown-content" value="World" selected>World </option></select>
 </div>
 <div class="b">	
-    <button class="button button4" onclick="window.location.href='./covid_scatter_plot.html'"> << Cases vs Deaths Overview </button>
-	<button class="button button4" onclick="window.location.href='./new_cases.html'"> New Cases Growth >></button>
+    <button class="button button4" onclick="window.location.href='./total_cases_growth.html'"> << Total Cases Growth </button>
+	<button class="button button4" onclick="window.location.href='./total_deaths.html'"> Total Deaths trend >></button>
 </div>
 <!-- Create a div where the graph will take place -->
-<div id="covid_total_cases"></div>
+<div id="covid_new_cases"></div>
 
 <script>
 
@@ -109,7 +110,7 @@ var margin = {top: 50, right: 100, bottom: 100, left: 400},
     height = 600 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-var svg = d3.select("#covid_total_cases")
+var svg = d3.select("#covid_new_cases")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -123,6 +124,7 @@ var svg = d3.select("#covid_total_cases")
 //  .range([ 0, width ])
 //  .padding(0.2);
 var x = d3.scaleBand()
+  .domain(["2019-12-31", "2020-07-21"])
   .range([ 0, width ]);
 var xAxis = svg.append("g")
   .attr("transform", "translate(0," + height + ")")
@@ -147,14 +149,14 @@ var yAxis = svg.append("g")
       .attr("dy", "1em")
       .style("text-anchor", "middle")
 	  .style("font", "20px times")
-      .text("Confirmed Cases");      
+      .text("New Cases");      
 
 
 // A function that create / update the plot for a given variable:
 function update(selectedVar) {
   
   // Parse the Data
-  d3.csv("https://covid.ourworldindata.org/data/ecdc/total_cases.csv", function(rawData) {
+  d3.csv("https://covid.ourworldindata.org/data/ecdc/new_cases.csv", function(rawData) {
   //d3.csv("http://github.com/surajbisht1809/Covid-19/blob/master/total_cases.csv", function(data) {
     // X axis
 	var cutoffDate = new Date(2020,0,15);
@@ -173,7 +175,7 @@ function update(selectedVar) {
     
 	          // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
   // Its opacity is set to 0: we don't see it by default.
-  var tooltip = d3.select("#covid_total_cases")
+  var tooltip = d3.select("#covid_new_cases")
    .append("div")
 	.style("position", "absolute")
     .style("opacity", 0)
@@ -193,7 +195,10 @@ function update(selectedVar) {
       .duration(200)
       .style("opacity", 1)
     tooltip
-      .html("Total Cases: " + formater(parseInt(d[selectedVar], 10)) + "<br />" + "Date: " + d.date)
+      .html("New Cases: " + formater(parseInt(d[selectedVar], 10)) + "<br />" + "Date:  " + d.date)
+      //.style("left", (d3.mouse(this)[0]+10))
+      //.style("top", (d3.mouse(this)[1]))
+	 // .style("display", "inline");
 	   .style("left", (d3.event.pageX) + "px")
        .style("top", (d3.event.pageY) + "px")
   }
@@ -201,6 +206,10 @@ function update(selectedVar) {
     tooltip
     .style("left", (d3.mouse(this)[0]+10) + "px")
     .style("top", (d3.mouse(this)[1]) + "px")
+	//.style("left", (d3.event.pageX - 34) + "px")
+    //.style("top", (d3.event.pageY - 12) + "px")
+	//  .style("left", (d3.event.pageX) + "px")
+     // .style("top", (d3.event.pageY - 28) + "px")
   }
   // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
   var hideTooltip = function(d) {
@@ -227,38 +236,37 @@ function update(selectedVar) {
 		.on("mouseover", showTooltip )
         .on("mouseleave", hideTooltip )
 		
-	// Append annotation line to highlight the separation
+		// Append annotation line to highlight the separation
 
     svg
     .append("line")
-      .attr("x1", x("2020-06-15") )
-      .attr("x2", x("2020-07-14") )
+      .attr("x1", x("2020-05-15") )
+      .attr("x2", x("2020-03-25") )
 	  //.attr("x1", midDate )
 	  //.attr("x1", midDate )
-      .attr("y1", y(15000000) )
-      .attr("y2", y(15000000) )
+      .attr("y1", y(275000) )
+      .attr("y2", y(275000) )
       .attr("stroke", "#F46D43")
      // .attr("stroke-dasharray", "4")
     svg
     .append("text")
-    .attr("x", x("2020-05-25"))
-    .attr("y", y(15200000))
-    .text("Confirmed cases trending upwards")
+    .attr("x", x("2020-03-25"))
+    .attr("y", y(278000))
+    .text("No specfic trend for new cases")
     .style("font-size", "15px")
 	
 	svg
     .append("circle")
-	.attr("cx",x("2020-07-25"))
-	.attr("cy",y(15000000))
-	.attr("r", 50)
+	.attr("cx",x("2020-06-15"))
+	.attr("cy",y(180000))
+	.attr("r", 200)
     .attr("stroke", "#F46D43")
     .attr("stroke-dasharray", "4")
-	.attr("fill", "none")
-	
-	
+	.attr("fill", "none")		
   })
   
 }
+
 // Initialize plot
 
 update('World')
