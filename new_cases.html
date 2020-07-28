@@ -117,6 +117,8 @@ div.c {
 
 <div class="footer">
   <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
+  Hover mouse over bars for more details <br>
+  China total and daily new cases looks stagnant <br>
   For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
 </div>
 
@@ -259,7 +261,7 @@ function update(selectedVar) {
     svg
     .append("line")
       .attr("x1", x("2020-05-15") )
-      .attr("x2", x("2020-03-25") )
+      .attr("x2", x("2020-01-30") )
 	  //.attr("x1", midDate )
 	  //.attr("x1", midDate )
       .attr("y1", y(275000) )
@@ -268,9 +270,9 @@ function update(selectedVar) {
      // .attr("stroke-dasharray", "4")
     svg
     .append("text")
-    .attr("x", x("2020-03-25"))
+    .attr("x", x("2020-01-30"))
     .attr("y", y(278000))
-    .text("No specfic trend for new cases")
+    .text("No specfic trend for daily new cases, possibly reporting duration or timing")
     .style("font-size", "15px")
 	
 	svg
