@@ -92,7 +92,8 @@ div.c {
 
 <div>
   <p class="body">Covid-19 has affected everyone's lives around the globe, let's go through impact level on various regions and countries.
-  Countries in all the regions are impacted with few countries including US, Brazil, India and Russia have reported most numbers of confirmed cases. 
+  Countries in all the regions are impacted with few countries including US, Brazil, India and Russia have reported most numbers of confirmed cases.
+  United kingdom (UK) and Mexico have highest confirmed case-fatality ratio.  
   Apart from few exceptions latest trend shows rapid growth in confirmed cases, deaths and daily new cases across all countries.
   China total cases, deaths and daily new cases looks stagnant, Oceania region is least impacted possibly population factor.
   </p>
@@ -218,9 +219,12 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
       .duration(100)
     tooltip
       .style("opacity", 1)
-      .html("Country: " + d.country + "<br />" + "Total Cases:  " + formater(d.total_cases) + 
+      .html("Country: " + d.location +
+	  "<br />" + "Total Cases:  " + formater(d.total_cases) + 
 	  "<br />" + "Total Deaths:  " + formater(d.total_deaths) +
-	  "<br />" + "Population:  " + formater(d.population))
+	  "<br />" + "Confirmed case-fatality ratio:  " + (parseInt(d.total_deaths)/parseInt(d.total_cases) * 100).toFixed(2) +
+	  "<br />" + "Population:  " + formater(d.population) +
+	  "<br />" + "Deaths per 100,000:  " +  (parseInt(d.total_deaths)/parseInt(d.population) * 100000).toFixed(2))
 	  .style("left", (d3.event.pageX) + "px")
       .style("top", (d3.event.pageY) + "px")
   }
@@ -285,14 +289,13 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
     .data(bigImpact)
 	.enter()
 	.append("text")
-  //    .attr("dy", "0.35em")
       .attr("class", function(d) { return "bubbles " + d.continent })
-	  .attr("x", function (d) { return x(d.total_cases) + z(d.total_cases)/2;})
-	  .attr("y", function (d) { return y(d.total_deaths) + z(d.total_cases)/2; })
+	  .attr("x", function (d) { return x(d.total_cases) - 10;})
+	  .attr("y", function (d) { return y(d.total_deaths) + 5; })
 	  .attr("font-family", "sans-serif")
       .attr("font-size", 12)
-      .text(function(d){ return d.country;})
-	  //.attr("rotate", 60)
+      .text(function(d){ return d.location;})
+	  //.attr("transform", "rotate(60)")
 	  
 	// Append annotation line to highlight the separation
  
