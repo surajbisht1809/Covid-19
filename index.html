@@ -61,7 +61,7 @@ div.c {
 .header {
   text-align: center;
   background: #aabc9c;
-  color: white;
+  color: black;
   font-size: 20px;
 }
 
@@ -91,9 +91,10 @@ div.c {
 </div>
 
 <div>
-  <p class="body">Covid-19 has affected everyone's lives around the globe, let's go through impact level on various regions and countries.
+  <p class="body">Covid-19 has affected everyone's lives around the globe, below chart shows impact level on various regions and countries.
+  Following scatter graph plots total confirmed-cases with total reported deaths and highlights most impacted countries
   Countries in all the regions are impacted with few countries including US, Brazil, India and Russia have reported most numbers of confirmed cases.
-  United kingdom (UK) and Mexico have highest confirmed case-fatality ratio.  
+  United kingdom (UK) and Mexico have highest confirmed case-fatality ratio. UK, US and Mexico has highest death percentage per 100K population.</br>  
   Apart from few exceptions latest trend shows rapid growth in confirmed cases, deaths and daily new cases across all countries.
   China total cases, deaths and daily new cases looks stagnant, Oceania region is least impacted possibly population factor.
   </p>
@@ -113,7 +114,7 @@ div.c {
 
 <div class="footer">
   <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
-  For this chart very low impacted countries are removed where total cases are less than 1000 and deaths are less than 100 <br>
+  Data is available till Jul 28 2020 and filtered, low impacted countries are removed where total cases are less than 1000 and deaths are less than 100 <br>
   For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
 </div>
 
@@ -191,9 +192,7 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
   // Add a scale for bubble color
   var myColor = d3.scaleOrdinal()
     .domain(["Asia", "Europe", "NorthAmerica", "SouthAmerica", "Africa", "Oceania"])
-    //.range(d3.schemeSet1);
-	//.range(["red", "blue", "green", "purple", "black" "orange"])
-	.range(["#5E4FA2", "#3288BD", "#FDAE61", "#F46D43", "#66C2A5", "#1BDDF4"])
+    .range(["#5E4FA2", "#3288BD", "#FDAE61", "#F46D43", "#66C2A5", "#1BDDF4"])
 
 
   // ---------------------------//
@@ -206,10 +205,11 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
 	  .style("position", "absolute")
       .style("opacity", 0)
       .attr("class", "tooltip")
-      .style("background-color", "black")
+      .style("background-color", "#446688")
       .style("border-radius", "5px")
-      .style("padding", "10px")
+      .style("padding", "11px")
       .style("color", "white")
+	  //.style("text-indent", "5em")
 
    const formater =  d3.format(',d');
   // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
@@ -293,7 +293,7 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
 	  .attr("x", function (d) { return x(d.total_cases) - 10;})
 	  .attr("y", function (d) { return y(d.total_deaths) + 5; })
 	  .attr("font-family", "sans-serif")
-      .attr("font-size", 12)
+      .attr("font-size", 14)
       .text(function(d){ return d.location;})
 	  //.attr("transform", "rotate(60)")
 	  

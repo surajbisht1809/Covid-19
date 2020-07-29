@@ -55,14 +55,14 @@ div.b {
 div.c {
   text-align: left;
   font-weight: bold;
-  font-size: 125%;
+  font-size: 110%;
 } 
 
 /* Header/Logo Title */
 .header {
   text-align: center;
   background: #aabc9c;
-  color: white;
+  color: black;
   font-size: 20px;
 }
 
@@ -95,28 +95,34 @@ div.c {
 <p><u>Covid-19 Confirmed cases growth trend</u></p>
 </div>
 
+<div class="c">
+<p> Select country from dropdown list</p>
+</div>
+<div class="dropdown">
+	<select class="dropbtn" id="selectButton"><option class="dropdown-content" value="World" selected>World </option></select>
+</div>
+
 
 <!-- Add buttons -->
 <!-- button onclick="update('World')">World</button>
 <button onclick="update('United States')">US</button>
 <button onclick="update('India')">India</button>
 <button onclick="update('China')">China</button> -->
-<div class="c">
-<p>Select country from dropdown list</p>
-</div>
+
 <!-- Initialize a select button -->
-<div class="dropdown">
-	<select class="dropbtn" id="selectButton"><option class="dropdown-content" value="World" selected>World </option></select>
-</div>
+
 <div class="b">	
     <button class="button button4" onclick="window.location.href='./index.html'"> << Home: Cases vs Deaths chart </button>
 	<button class="button button4" onclick="window.location.href='./new_cases.html'"> New Cases Trend >></button>
 </div>
+
+
 <!-- Create a div where the graph will take place -->
 <div id="covid_total_cases"></div>
 
 <div class="footer">
   <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
+  Latest data is used from https://covid.ourworldindata.org/data/ecdc/total_cases.csv and https://covid.ourworldindata.org/data/ecdc/locations.csv <br>
   Hover mouse over bars for more details <br>
   China total cases, deaths and daily new cases looks stagnant <br>
   For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
@@ -214,7 +220,9 @@ function update(selectedVar) {
       .duration(200)
       .style("opacity", 1)
     tooltip
-      .html("Total Cases: " + formater(parseInt(d[selectedVar], 10)) + "<br />" + "Date: " + d.date)
+      .html("Total Cases: " + formater(parseInt(d[selectedVar], 10)) + 
+	  "<br />" + "Date: " + d.date +
+	  "<br />" + "Country/Region:  " + selectedVar)
 	   .style("left", (d3.event.pageX) + "px")
        .style("top", (d3.event.pageY) + "px")
   }
@@ -262,10 +270,17 @@ function update(selectedVar) {
      // .attr("stroke-dasharray", "4")
     svg
     .append("text")
-    .attr("x", x("2020-05-25"))
+    .attr("x", x("2020-04-23"))
+    .attr("y", y(15700000))
+    .text("Confirmed cases trending upwards with few exceptions")
+    .style("font-size", "16px")
+	
+	svg
+    .append("text")
+    .attr("x", x("2020-05-27"))
     .attr("y", y(15200000))
-    .text("Confirmed cases trending upwards")
-    .style("font-size", "15px")
+    .text("(Move mouse over bars for more details)")
+    .style("font-size", "12px")
 	
 	svg
     .append("circle")

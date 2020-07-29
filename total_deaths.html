@@ -55,14 +55,14 @@ div.b {
 div.c {
   text-align: left;
   font-weight: bold;
-  font-size: 125%;
+  font-size: 110%;
 } 
 
 /* Header/Logo Title */
 .header {
   text-align: center;
   background: #aabc9c;
-  color: white;
+  color: black;
   font-size: 20px;
 }
 
@@ -110,13 +110,14 @@ div.c {
 </div>
 <div class="b">	
     <button class="button button4" onclick="window.location.href='./new_cases.html'"> << New Cases Trend </button>
-	<button class="button button4" onclick="window.location.href='./index.html'"> Home: Cases vs Deaths chart</button>
+	<button class="button button4" onclick="window.location.href='./index.html'"> HOME: Cases vs Deaths chart</button>
 </div>
 <!-- Create a div where the graph will take place -->
 <div id="covid_total_deaths"></div>
 
 <div class="footer">
   <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
+  Latest data is used from https://covid.ourworldindata.org/data/ecdc/total_deaths.csv and https://covid.ourworldindata.org/data/ecdc/locations.csv <br>
   Hover mouse over bars for more details <br>
   China total cases, deaths and daily new cases looks stagnant <br>
   For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
@@ -216,7 +217,9 @@ function update(selectedVar) {
       .duration(200)
       .style("opacity", 1)
     tooltip
-      .html("Total Deaths:  " + formater(parseInt(d[selectedVar], 10)) + "<br />" + "Date:  " + d.date)
+      .html("Total Deaths:  " + formater(parseInt(d[selectedVar], 10)) + 
+	  "<br />" + "Date:  " + d.date +
+	  "<br />" + "Country/Region:  " + selectedVar)
 	  .style("left", (d3.event.pageX) + "px")
       .style("top", (d3.event.pageY) + "px")
 	  }
@@ -265,10 +268,17 @@ function update(selectedVar) {
      // .attr("stroke-dasharray", "4")
     svg
     .append("text")
+    .attr("x", x("2020-05-23"))
+    .attr("y", y(630000))
+    .text("Upward turn in Covid-19 fatalities")
+    .style("font-size", "16px")
+	
+	svg
+    .append("text")
     .attr("x", x("2020-05-25"))
     .attr("y", y(610000))
-    .text("Upward turn in Covid-19 fatalities")
-    .style("font-size", "15px")
+    .text("(Move mouse over bars for more details)")
+    .style("font-size", "12px")
 	
 	svg
     .append("circle")
