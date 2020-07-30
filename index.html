@@ -78,6 +78,7 @@ div.c {
   color: white;
   font-size: 18px;
 }
+
 </style>
 </head>
 <!-- Load d3.js -->
@@ -91,12 +92,14 @@ div.c {
 </div>
 
 <div>
-  <p class="body">Covid-19 has affected everyone's lives around the globe, below chart shows impact level on various regions and countries.
-  Following scatter graph plots total confirmed-cases with total reported deaths and highlights most impacted countries
+  <p class="body">Covid-19 has affected everyone's lives around the globe, this story covers impact level on various regions and countries.
   Countries in all the regions are impacted with few countries including US, Brazil, India and Russia have reported most numbers of confirmed cases.
-  United kingdom (UK) and Mexico have highest confirmed case-fatality ratio. UK, US and Mexico has highest death percentage per 100K population.</br>  
+  United kingdom (UK) and Mexico have highest confirmed case-fatality ratio. UK, US and Mexico has highest death percentage per 100K population.  
   Apart from few exceptions latest trend shows rapid growth in confirmed cases, deaths and daily new cases across all countries.
-  China total cases, deaths and daily new cases looks stagnant, Oceania region is least impacted possibly population factor.
+  China total cases, deaths and daily new cases looks stagnant, Oceania region is least impacted possibly population factor.<br>
+  Below chart is a scatter plot between total confirmed-cases and total reported deaths highlighting most impacted countries, logarithmic scale
+  is used for both axis.    
+  Subsequent charts have time series data for confirmed cases, new cases and total deaths reported.
   </p>
 </div>
 
@@ -114,7 +117,7 @@ div.c {
 
 <div class="footer">
   <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
-  Data is available till Jul 28 2020 and filtered, low impacted countries are removed where total cases are less than 1000 and deaths are less than 100 <br>
+  Data till Jul 30 2020 is used and filtered, low impacted countries are removed where total cases are less than 1000 and deaths are less than 100 <br>
   For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
 </div>
 
@@ -312,7 +315,10 @@ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/filtere
     .attr("x", x(10000))
     .attr("y", y(1300000))
     .text("Most impacted countries, Oceania region is least impacted")
-    .style("font-size", "18px")
+    .style("font-size", "16px")
+	.style("fill", "blue")
+	.style("font-family", "sans-serif")
+	
 	svg
     .append("text")
     .attr("x", x(20000))

@@ -173,8 +173,8 @@ var yAxis = svg.append("g")
 function update(selectedVar) {
   
   // Parse the Data
-  d3.csv("https://covid.ourworldindata.org/data/ecdc/new_cases.csv", function(rawData) {
-  //d3.csv("http://github.com/surajbisht1809/Covid-19/blob/master/total_cases.csv", function(data) {
+  //d3.csv("https://covid.ourworldindata.org/data/ecdc/new_cases.csv", function(rawData) {
+  d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/new_cases.csv", function(rawData) {
     // X axis
 	var cutoffDate = new Date(2020,0,15);
 	//console.log(rawData);

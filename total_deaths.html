@@ -118,8 +118,9 @@ div.c {
 <div class="footer">
   <p>Data Source: https://ourworldindata.org/coronavirus-source-data <br>
   Latest data is used from https://covid.ourworldindata.org/data/ecdc/total_deaths.csv and https://covid.ourworldindata.org/data/ecdc/locations.csv <br>
-  Hover mouse over bars for more details <br>
   China total cases, deaths and daily new cases looks stagnant <br>
+  Counntries with zero deaths were removed from dropdown list <br>
+  Bhutan, Anguilla, Bonaire Sint Eustatius and Saba, Cambodia, Dominica, Eritrea, Faeroe Islands, Falkland Islands, Fiji, French Polynesia, Gibraltar, Greenland, Grenada, Laos, Mongolia, New Caledonia, Papua New Guinea, Saint Kitts and Nevis, Saint Lucia, Saint Kitts and Nevis, Seychelles, Timor, Uganda, Vatican and Vietnam <br>
   For any query contact Suraj Bisht email id: surajb2@illinois.edu</p>
 </div>
 
@@ -177,8 +178,8 @@ var yAxis = svg.append("g")
 function update(selectedVar) {
   
   // Parse the Data
-  d3.csv("https://covid.ourworldindata.org/data/ecdc/total_deaths.csv", function(rawData) {
-  //d3.csv("http://github.com/surajbisht1809/Covid-19/blob/master/total_cases.csv", function(data) {
+  //d3.csv("https://covid.ourworldindata.org/data/ecdc/total_deaths.csv", function(rawData) {
+  d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/total_deaths.csv", function(rawData) {
     // X axis
 	var cutoffDate = new Date(2020,0,15);
 	//console.log(rawData);
@@ -268,10 +269,10 @@ function update(selectedVar) {
      // .attr("stroke-dasharray", "4")
     svg
     .append("text")
-    .attr("x", x("2020-05-12"))
+    .attr("x", x("2020-05-21"))
     .attr("y", y(630000))
     .text("Upward turn in Covid-19 fatalities")
-    .style("font-size", "18px")
+    .style("font-size", "16px")
 	.style("fill", "blue")
 	.style("font-family", "sans-serif")
 	
