@@ -298,7 +298,8 @@ function update(selectedVar) {
 
 update('World')
  
- d3.csv("https://covid.ourworldindata.org/data/ecdc/locations.csv", function(countryData) {
+ //d3.csv("https://covid.ourworldindata.org/data/ecdc/locations.csv", function(countryData) {
+ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/locations.csv", function(countryData) {
     // add the options to the button
 	countryData.push({countriesAndTerritories: "World",location: "World", continent: "World",population_year: "2020",population:"38928341"})
 	//console.log(countryData)

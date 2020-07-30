@@ -299,10 +299,10 @@ function update(selectedVar) {
 
 update('World')
  
- d3.csv("https://covid.ourworldindata.org/data/ecdc/locations.csv", function(countryData1) {
+ //d3.csv("https://covid.ourworldindata.org/data/ecdc/locations.csv", function(countryData1) {
+ d3.csv("https://raw.githubusercontent.com/surajbisht1809/Covid-19/master/locations.csv", function(countryData1) {
     // add the options to the button
 	countryData1.push({countriesAndTerritories: "World",location: "World", continent: "World",population_year: "2020",population:"7,800,000,000"})
-	//countryData.remove({countriesAndTerritories: "Seychelles",location: "Seychelles", continent: "Africa",population_year: "2020",population:"98340"})
 	var countryData = countryData1.filter(function(d){ return  (
 	d.location != "Bhutan" &&
 	d.location != "Anguilla" &&
