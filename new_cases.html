@@ -269,10 +269,12 @@ function update(selectedVar) {
      // .attr("stroke-dasharray", "4")
     svg
     .append("text")
-    .attr("x", x("2020-01-30"))
+    .attr("x", x("2020-01-18"))
     .attr("y", y(285000))
     .text("No specfic trend for daily new cases, possibly reporting duration or timing")
     .style("font-size", "16px")
+	.style("fill", "blue")
+	.style("font-family", "sans-serif")
 	
 	svg
     .append("text")
